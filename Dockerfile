@@ -70,8 +70,9 @@ RUN mkdir -p database \
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-# Switch to non-root user
-USER www-data
+# Configure directory permissions for Laravel storage/bootstrap cache
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 8080
 
