@@ -43,6 +43,7 @@ FROM php:8.3-fpm-alpine
 # Install system utilities & production dependencies
 RUN apk add --no-cache \
     sqlite \
+    sqlite-dev \
     libzip \
     libpng \
     libjpeg-turbo \
