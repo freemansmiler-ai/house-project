@@ -73,6 +73,6 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
 # Switch to non-root user
 USER www-data
 
-EXPOSE 9000
+EXPOSE 8080
 
-CMD ["php-fpm"]
+CMD php artisan serve --host=0.0.0.0 --port=$PORT
