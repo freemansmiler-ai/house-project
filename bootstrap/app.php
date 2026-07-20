@@ -13,13 +13,26 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->append(\App\Http\Middleware\SanitizeInput::class);
-        $middleware->alias([
-            'role' => \App\Http\Middleware\RoleMiddleware::class,
-        ]);
-    })
+    $middleware->append(\App\Http\Middleware\SanitizeInput::class);
+
+    $middleware->alias([
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
+    ]);
+
+    $middleware->redirectGuestsTo(function ($request) {
+        return null;
+    });
+})
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
-        );
-    })->create();
+    $exceptions->shouldRenderJsonWhen(
+        fn (Request $request) => $request->is('api/*'),
+    );
+
+    $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+        if ($request->is('api/*')) {
+            return response()->json([
+                'message' => 'Unauthenticated.'
+            ], 401);
+        }
+    });
+})->create();
